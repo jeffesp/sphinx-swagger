@@ -99,8 +99,7 @@ class SwaggerTranslator(nodes.SparseNodeVisitor):
         :param sphinx.addnodes.desc node:
         """
         assert self._current_node is node
-        self._swagger_doc.add_endpoint(self._endpoint,
-                                       _generate_debug_tree(node))
+        self._swagger_doc.add_endpoint(self._endpoint)
         self._endpoint = None
         self._current_node = None
 
