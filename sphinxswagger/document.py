@@ -25,7 +25,7 @@ class SwaggerDocument(object):
 
         return {'swagger': '2.0',
                 'info': info,
-                'host': 'localhost:80',
+                'host': 'localhost:8010',
                 'basePath': '/',
                 'paths': self._paths}
 
@@ -52,6 +52,7 @@ class SwaggerEndpoint(object):
         self.method = None
         self.uri_template = None
         self.summary = ''
+        self.tags = list()
         self.description = ''
         self.parameters = []
         self.responses = {}
@@ -100,7 +101,7 @@ class SwaggerEndpoint(object):
                 info['reason'], ' '.join(tokens)).strip()
 
     def generate_swagger(self):
-        swagger = {'summary': self.summary, 'description': self.description}
+        swagger = {'summary': self.summary, 'description': self.description, 'tags': self.tags}
         if self.parameters:
             swagger['parameters'] = self.parameters
 

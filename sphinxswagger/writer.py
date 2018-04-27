@@ -223,6 +223,10 @@ class EndpointVisitor(nodes.SparseNodeVisitor):
                 value_node.walkabout(visitor)
                 self.endpoint.set_default_response_structure(
                     visitor.parameters, is_array=True)
+            elif name == "Tags":
+                visitor = ParagraphVisitor(self.document)
+                value_node.walkabout(visitor)
+                self.endpoint.tags.append(visitor.get_paragraph())
             else:
                 self.document.reporter.warning(
                     'unhandled field type: {}'.format(name), base_node=node)
