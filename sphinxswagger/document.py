@@ -27,6 +27,16 @@ class SwaggerDocument(object):
                 'info': info,
                 'host': 'localhost:8010',
                 'basePath': '/',
+                "securityDefinitions": {
+                    "JWT": {
+                    "type": "apiKey",
+                    "name": "Authorization",
+                    "in": "header"
+                    }
+                },
+                "security": [
+                    {"JWT": []}
+                ],
                 'paths': self._paths}
 
     def add_endpoint(self, endpoint, debug_info=None):
