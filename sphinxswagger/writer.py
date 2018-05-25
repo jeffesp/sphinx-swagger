@@ -260,6 +260,8 @@ class ParameterVisitor(nodes.SparseNodeVisitor):
             'float': 'number',
             'object': 'object',
             'dict': 'object',
+            'list': 'array',
+            'array': 'array',
             'bool': 'boolean',
         }
 
@@ -271,7 +273,19 @@ class ParameterVisitor(nodes.SparseNodeVisitor):
         try:
             s, e = tokens.index('(', 0, idx), tokens.index(')', 0, idx)
             name = ' '.join(tokens[:s])
-            type = type_map.get(tokens[s+1]) or 'string'
+            key = tokens[s+1]
+
+            key_map = None
+
+            sub_type = 'string'
+            if all([sep in key for sep in ['(', ')']]) and key.index('(') < key.index(')'):
+                key_map = key[:key.index('(')]
+                if key_map in ['array', 'list']:
+                    sub_key = key[key.index('(')+1:key.index(')')]
+                    sub_type = type_map.get(sub_key) or 'string'
+            else:
+                key_map = key
+            type = type_map.get(key_map) or 'string'
         except ValueError:
             name = ' '.join(tokens[:idx])
             type = 'string'
@@ -280,9 +294,15 @@ class ParameterVisitor(nodes.SparseNodeVisitor):
         description = description[0].upper() + description[1:]
 
         param_info = self._fixed_attributes.copy()
-        param_info.update({'name': name,
-                           'type': type,
-                           'description': description})
+        if type == 'array':
+            param_info.update({'name': name,
+                            'type': type,
+                            'description': description,
+                            'items': {'type': sub_type}})
+        else:
+            param_info.update({'name': name,
+                            'type': type,
+                            'description': description})
         self.parameters.append(param_info)
 
 
