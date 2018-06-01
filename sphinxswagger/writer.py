@@ -223,10 +223,16 @@ class EndpointVisitor(nodes.SparseNodeVisitor):
                 value_node.walkabout(visitor)
                 self.endpoint.set_default_response_structure(
                     visitor.parameters, is_array=True)
+            elif name == "Return" or name == 'Returns':
+                visitor = ParagraphVisitor(self.document)
+                value_node.walkabout(visitor)
+                self.endpoint.responses.update({'default': {'description': visitor.get_paragraph()}})
             elif name == "Tags":
                 visitor = ParagraphVisitor(self.document)
                 value_node.walkabout(visitor)
                 self.endpoint.tags.append(visitor.get_paragraph())
+            elif name == "Rtype":
+                pass
             else:
                 self.document.reporter.warning(
                     'unhandled field type: {}'.format(name), base_node=node)
@@ -299,6 +305,9 @@ class ParameterVisitor(nodes.SparseNodeVisitor):
                             'type': type,
                             'description': description,
                             'items': {'type': sub_type}})
+        elif type == 'object':
+            param_info.update({'name': name,
+                            'additionalProperties': {'type': 'string'}})
         else:
             param_info.update({'name': name,
                             'type': type,
