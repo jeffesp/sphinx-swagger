@@ -19,8 +19,6 @@ class BuildSwagger(cmd.Command):
         self.ignore_distinfo = False
 
     def finalize_options(self):
-        self.config_dir = 'docs/source'
-        self.output_file = 'docs/build/swagger.json'
         if self.config_dir is None:
             self.config_dir = 'docs'
         self.ensure_dirname('config_dir')
@@ -35,10 +33,10 @@ class BuildSwagger(cmd.Command):
 
     def run(self):
         build_cmd = self.get_finalized_command('build')
-        build_cmd.build_base = 'docs/build'
-        build_dir = os.path.join(os.path.abspath(build_cmd.build_base))
+        build_dir = os.path.join(os.path.abspath(build_cmd.build_base),
+                                 'swagger')
         self.mkpath(build_dir)
-        doctree_dir = os.path.join(build_dir, '.doctrees')
+        doctree_dir = os.path.join(build_dir, 'doctrees')
         self.mkpath(doctree_dir)
 
         overrides = {}

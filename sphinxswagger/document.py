@@ -27,16 +27,6 @@ class SwaggerDocument(object):
                 'info': info,
                 'host': 'localhost:8010',
                 'basePath': '/',
-                "securityDefinitions": {
-                    "JWT": {
-                    "type": "apiKey",
-                    "name": "Authorization",
-                    "in": "header"
-                    }
-                },
-                "security": [
-                    {"JWT": []}
-                ],
                 'paths': self._paths}
 
     def add_endpoint(self, endpoint, debug_info=None):
@@ -104,7 +94,7 @@ class SwaggerEndpoint(object):
                 except (KeyError, TypeError, ValueError):
                     info['reason'] = 'Unknown'
 
-            tokens = info['description'].split(maxsplit=2)
+            tokens = info['description'].split(' ', 2)
             if tokens:
                 tokens[0] = tokens[0].title()
             swagger_rsp['description'] = '{}\n\n{}'.format(

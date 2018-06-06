@@ -23,7 +23,7 @@ def _find_param_separator(tokens):
     where the ``--`` might be a single hyphen or the unicode em-dash...
 
     """
-    idx = [i for i, v in enumerate(tokens) if v in ('\u2013', '--', '-')]
+    idx = [i for i, v in enumerate(tokens) if v in (u'\u2013', '--', '-')]
     return idx[0] if idx else None
 
 
@@ -92,7 +92,7 @@ class SwaggerTranslator(nodes.SparseNodeVisitor):
         self._current_node = node
         self._endpoint = document.SwaggerEndpoint()
         self._endpoint.method = node['desctype']
-        self.info('processing {}', node['desctype'])
+        self.debug('processing {}', node['desctype'])
 
     def _complete_current_path(self, node):
         """
